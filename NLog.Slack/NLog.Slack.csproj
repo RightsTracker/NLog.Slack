@@ -25,7 +25,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="NLog" Version="4.5.11" />
+    <PackageReference Include="NLog" Version="4.6.7" />
   </ItemGroup>
+
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="copy $(TargetDir)$(TargetName).dll C:\RT_Libs\&#xD;&#xA;copy $(TargetDir)$(TargetName).pdb C:\RT_Libs\" />
+  </Target>
 
 </Project>

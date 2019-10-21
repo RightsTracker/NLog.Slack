@@ -21,6 +21,9 @@ namespace NLog.Slack.Demo
                 _logger.Error(ex, "KABOOM!");
             }
 
+            // See https://github.com/nlog/nlog/wiki/Tutorial
+            NLog.LogManager.Shutdown(); // Flush and close down internal threads and timers
+
             Console.WriteLine("Done - check your Slack channel!");
             Console.ReadLine();
         }

@@ -59,34 +59,45 @@ namespace NLog.Slack
                 .Build(this.WebHookUrl)
                 .OnError(e => info.Continuation(e))
                 .WithMessage(message);
+                //.WithMessage("");
 
             if (this.ShouldIncludeProperties(info.LogEvent) || this.ContextProperties.Count > 0)
             {
                 var color = this.GetSlackColorFromLogLevel(info.LogEvent.Level);
+                //Attachment attachment = new Attachment(info.LogEvent.Message) { Color = color, Text = "HELLO WORLD" };
                 Attachment attachment = new Attachment(info.LogEvent.Message) { Color = color };
-                var allProperties = this.GetAllProperties(info.LogEvent);
-                foreach (var property in allProperties)
-                {
-                    if (string.IsNullOrEmpty(property.Key))
-                        continue;
 
-                    var propertyValue = property.Value?.ToString();
-                    if (string.IsNullOrEmpty(propertyValue))
-                        continue;
+                //var allProperties = this.GetAllProperties(info.LogEvent);
+                ////foreach (var property in allProperties)
+                //foreach (var property in this.ContextProperties)
+                //{
+                //    //if (string.IsNullOrEmpty(property.Key))
+                //    //    continue;
 
-                    attachment.Fields.Add(new Field(property.Key) { Value = propertyValue, Short = true });
-                }
-                if (attachment.Fields.Count > 0)
-                    slack.AddAttachment(attachment);
+                //    //var propertyValue = property.Value?.ToString();
+                //    var propertyValue = property.Layout?.Render(info.LogEvent);
+                //    if (string.IsNullOrEmpty(propertyValue))
+                //        continue;
+
+                //    //attachment.Fields.Add(new Field(property.Key) { Value = propertyValue, Short = true });
+                //    //attachment.Fields.Add(new Field(property.Key) { Value = propertyValue, Short = false });
+                //    //attachment.Fields.Add(new Field(property.Name) { Value = propertyValue, Short = false, Title = "TITLE FIELD" });
+                //    attachment.Fields.Add(new Field(propertyValue) { Short = false });
+                //}
+                //if (attachment.Fields.Count > 0)
+                //    slack.AddAttachment(attachment);
+
+                slack.AddAttachment(attachment);
             }
-      
+
             var exception = info.LogEvent.Exception;
             if (!this.Compact && exception != null)
             {
                 var color = this.GetSlackColorFromLogLevel(info.LogEvent.Level);
                 var exceptionAttachment = new Attachment(exception.Message) { Color = color };
                 exceptionAttachment.Fields.Add(new Field("StackTrace") {
-                    Title = $"Type: {exception.GetType().ToString()}",
+                    //Title = $"Type: {exception.GetType().ToString()}",
+                    Title = $"{exception.GetType()} - {exception.Message}",
                     Value = exception.StackTrace ?? "N/A"
                 });
 
